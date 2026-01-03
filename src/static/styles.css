@@ -703,7 +703,7 @@ footer {
 #theme-toggle {
   position: absolute;
   top: 10px;
-  right: 15px;
+  left: 15px;
   background-color: rgba(255, 255, 255, 0.2);
   border: none;
   color: var(--primary-text);
@@ -725,10 +725,4 @@ footer {
 
 #theme-toggle:active {
   transform: scale(0.95);
-}
-
-/* Adjust user controls position when theme toggle is present */
-body:not(.not-authenticated) #theme-toggle {
-  right: auto;
-  left: 15px;
 }
