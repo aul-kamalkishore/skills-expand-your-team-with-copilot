@@ -867,7 +867,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Open share link in new window/tab
-    window.open(shareLink, "_blank", "width=600,height=400");
+    if (platform === "email") {
+      // Email links should use window.location.href
+      window.location.href = shareLink;
+    } else {
+      // Social platforms open in popup window
+      window.open(shareLink, "_blank", "width=600,height=400");
+    }
 
     showMessage(`Sharing ${activityName} on ${platform}!`, "info");
   }
