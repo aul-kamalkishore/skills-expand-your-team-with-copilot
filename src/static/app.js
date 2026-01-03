@@ -829,7 +829,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Build share message
     const shareText = `Check out this activity at Mergington High School: ${activityName}`;
     const shareUrl = window.location.href;
-    const shareDescription = activityDetails ? activityDetails.description : "";
 
     // Build platform-specific URLs
     let shareLink = "";
@@ -854,6 +853,7 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
 
       case "email":
+        const shareDescription = activityDetails ? activityDetails.description : "";
         const emailSubject = `Activity: ${activityName}`;
         const emailBody = `${shareText}\n\n${shareDescription}\n\nVisit: ${shareUrl}`;
         shareLink = `mailto:?subject=${encodeURIComponent(
@@ -866,12 +866,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Open share link
-    if (platform === "email") {
-      window.location.href = shareLink;
-    } else {
-      window.open(shareLink, "_blank", "width=600,height=400");
-    }
+    // Open share link in new window/tab
+    window.open(shareLink, "_blank", "width=600,height=400");
 
     showMessage(`Sharing ${activityName} on ${platform}!`, "info");
   }
