@@ -552,6 +552,20 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("")}
         </ul>
       </div>
+      <div class="share-buttons">
+        <button class="share-btn" data-activity="${name}" data-share="twitter" aria-label="Share on Twitter" title="Share on Twitter">
+          <span class="share-icon">🐦</span>
+        </button>
+        <button class="share-btn" data-activity="${name}" data-share="facebook" aria-label="Share on Facebook" title="Share on Facebook">
+          <span class="share-icon">📘</span>
+        </button>
+        <button class="share-btn" data-activity="${name}" data-share="linkedin" aria-label="Share on LinkedIn" title="Share on LinkedIn">
+          <span class="share-icon">💼</span>
+        </button>
+        <button class="share-btn" data-activity="${name}" data-share="email" aria-label="Share via Email" title="Share via Email">
+          <span class="share-icon">✉️</span>
+        </button>
+      </div>
       <div class="activity-card-actions">
         ${
           currentUser
@@ -575,6 +589,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = activityCard.querySelectorAll(".delete-participant");
     deleteButtons.forEach((button) => {
       button.addEventListener("click", handleUnregister);
+    });
+
+    // Add click handlers for share buttons
+    const shareButtons = activityCard.querySelectorAll(".share-btn");
+    shareButtons.forEach((button) => {
+      button.addEventListener("click", handleShare);
     });
 
     // Add click handler for register button (only when authenticated)
@@ -797,6 +817,63 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     );
+  }
+
+  // Handle social sharing
+  function handleShare(event) {
+    const button = event.currentTarget;
+    const activityName = button.dataset.activity;
+    const platform = button.dataset.share;
+    const activityDetails = allActivities[activityName];
+
+    // Build share message
+    const shareText = `Check out this activity at Mergington High School: ${activityName}`;
+    const shareUrl = window.location.href;
+    const shareDescription = activityDetails ? activityDetails.description : "";
+
+    // Build platform-specific URLs
+    let shareLink = "";
+
+    switch (platform) {
+      case "twitter":
+        shareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          shareText
+        )}&url=${encodeURIComponent(shareUrl)}`;
+        break;
+
+      case "facebook":
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          shareUrl
+        )}&quote=${encodeURIComponent(shareText)}`;
+        break;
+
+      case "linkedin":
+        shareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+          shareUrl
+        )}`;
+        break;
+
+      case "email":
+        const emailSubject = `Activity: ${activityName}`;
+        const emailBody = `${shareText}\n\n${shareDescription}\n\nVisit: ${shareUrl}`;
+        shareLink = `mailto:?subject=${encodeURIComponent(
+          emailSubject
+        )}&body=${encodeURIComponent(emailBody)}`;
+        break;
+
+      default:
+        console.error("Unknown share platform:", platform);
+        return;
+    }
+
+    // Open share link
+    if (platform === "email") {
+      window.location.href = shareLink;
+    } else {
+      window.open(shareLink, "_blank", "width=600,height=400");
+    }
+
+    showMessage(`Sharing ${activityName} on ${platform}!`, "info");
   }
 
   // Show message function
